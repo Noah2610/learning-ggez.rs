@@ -1,7 +1,14 @@
-use ::ggez::{graphics, Context, GameResult};
+use ::ggez::{
+  graphics,
+  Context,
+  GameResult,
+  event::Keycode
+};
 use ::settings::entity::{player::*, wall::*};
+use ::geo::Point;
 use ::geo::mask::{Mask, Origin};
 use ::color::Color;
+use ::control::{MovementControls, ControlType};
 
 // ENTITY //
 struct Entity {
@@ -28,21 +35,49 @@ impl Entity {
 
 // PLAYER //
 pub struct Player {
-  entity: Entity
+  filler:   i8,  // NOTE: This fixes a vim auto-formatting bug that _bugs_ me.
+  entity:   Entity,
+  controls: MovementControls
 }
 
 impl Player {
   pub fn new(x: f32, y: f32) -> Self {
     Self {
+      filler: 0, // NOTE: Fixes a vim auto-formatting bug.
+      controls: MovementControls::new(
+        &controls::UP.to_vec(),
+        &controls::DOWN.to_vec(),
+        &controls::LEFT.to_vec(),
+        &controls::RIGHT.to_vec()
+      ),
       entity: Entity::new(
-                Mask::new(
-                  x, y,
-                  PLAYER_SIZE.w, PLAYER_SIZE.h,
-                  Origin::Center
-                ),
-                PLAYER_COLOR
-              ),
+        Mask::new(
+          x, y,
+          PLAYER_SIZE.w, PLAYER_SIZE.h,
+          Origin::Center
+        ),
+        PLAYER_COLOR
+      )
     }
+  }
+
+  pub fn key_pressed(&mut self, keycode: &Keycode) {
+    let mut mv_opt: Option<Point> = None;
+    if let Some(dir) = self.controls.find(keycode) {
+      match dir {
+        ControlType::Up    => mv_opt = Some(Point::new(0.0, -STEP_SIZE)),
+        ControlType::Down  => mv_opt = Some(Point::new(0.0,  STEP_SIZE)),
+        ControlType::Left  => mv_opt = Some(Point::new(-STEP_SIZE, 0.0)),
+        ControlType::Right => mv_opt = Some(Point::new( STEP_SIZE, 0.0))
+      }
+    }
+    if let Some(mv) = mv_opt {
+      self.move_by(&mv);
+    }
+  }
+
+  fn move_by(&mut self, move_point: &Point) {
+    self.entity.mask.point.add(&move_point);
   }
 
   pub fn update(&mut self, ctx: &mut Context) -> GameResult<()>{

@@ -30,9 +30,9 @@ impl SideCollection {
 
 // MASK //
 pub struct Mask {
-  point:  Point,
-  size:   Size,
-  origin: Origin,
+  pub point:  Point,
+  pub size:   Size,
+  pub origin: Origin,
 }
 
 impl Mask {
@@ -45,14 +45,15 @@ impl Mask {
   }
 
   pub fn rectangle(&self) -> ::ggez::graphics::Rect {
-    [
-      self.point.x, self.point.y,
-      self.size.w,  self.size.h
-    ].into()
+    let top_left: Point = self.top_left();
+    return [
+      top_left.x,  top_left.y,
+      self.size.w, self.size.h
+    ].into();
   }
 
-  fn side(&self, side: char) -> f32 {
-    let top_left: Point = match self.origin {
+  fn top_left(&self) -> Point {
+    match self.origin {
       Origin::Center => Point::new(
         self.point.x - self.size.w / 2.0,
         self.point.y - self.size.h / 2.0
@@ -73,8 +74,11 @@ impl Mask {
         self.point.x - self.size.w,
         self.point.y - self.size.h
       )
-    };
+    }
+  }
 
+  fn side(&self, side: char) -> f32 {
+    let top_left: Point = self.top_left();
     return match side {
       't' => top_left.y,
       'b' => top_left.y + self.size.h,

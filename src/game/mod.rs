@@ -1,13 +1,13 @@
 use ::std::time::{Instant, Duration};
 use ::ggez;
 use ::ggez::{
-  graphics,
   Context,
   GameResult,
-  event
+  graphics,
+  event,
+  event::Keycode
 };
 use ::settings::game::*;
-use ::entity;
 
 mod game_manager;
 
@@ -49,6 +49,7 @@ impl Game {
 // GAME_STATE //
 struct GameState {
   game_manager: game_manager::GameManager,
+  pressed_keys: Vec<Keycode>,
   last_update:  Instant
 }
 
@@ -56,17 +57,48 @@ impl GameState {
   pub fn new() -> Self {
     Self {
       game_manager: game_manager::GameManager::new(),
+      pressed_keys: Vec::new(),
       last_update:  Instant::now()
     }
   }
 }
 
 impl event::EventHandler for GameState {
-  fn update(&mut self, _ctx: &mut Context) -> GameResult<()> {
+  fn key_down_event(&mut self,
+                    ctx:     &mut Context,
+                    keycode: Keycode,
+                    _keymod: event::Mod,
+                    repeat:  bool) {
+    if repeat { return (); }
+    if let Keycode::Escape = keycode {
+      ctx.quit().expect("Should quit the context");
+    }
+    if !self.pressed_keys.iter().any( |&key| keycode == key ) {
+      self.pressed_keys.push(keycode);
+    }
+  }
+
+  fn key_up_event(&mut self,
+                  _ctx:    &mut Context,
+                  keycode: Keycode,
+                  _keymod: event::Mod,
+                  repeat:  bool) {
+    if repeat { return (); }
+    let index: Option<usize> = self.pressed_keys.iter().position( |&key| keycode == key );
+    if let Some(i) = index {
+      self.pressed_keys.remove(i);
+    }
+  }
+
+  fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
     if Instant::now() - self.last_update < Duration::from_millis(UPDATE_DELAY)
     { return Ok(()); }
 
-    self.game_manager.update(_ctx)?;
+    if !self.pressed_keys.is_empty() {
+      self.game_manager.keys_pressed(&self.pressed_keys);
+    }
+
+    self.game_manager.update(ctx)?;
 
     return Ok(());
   }

@@ -8,6 +8,11 @@ impl Point {
   pub fn new(x: f32, y: f32) -> Self {
     Self { x, y }
   }
+
+  pub fn add(&mut self, move_by_point: &Point) {
+    self.x += move_by_point.x;
+    self.y += move_by_point.y;
+  }
 }
 
 // SIZE //

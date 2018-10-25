@@ -7,6 +7,7 @@ mod settings;
 mod geo;
 mod color;
 mod entity;
+mod control;
 mod game;
 
 fn main() {

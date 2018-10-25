@@ -1,5 +1,8 @@
-use ::ggez;
-use ::ggez::{Context, GameResult};
+use ::ggez::{
+  Context,
+  GameResult,
+  event::Keycode
+};
 use ::settings::game::WINDOW_SIZE;
 use ::entity::{Player, Wall};
 
@@ -17,6 +20,12 @@ impl GameManager {
     return Self {
       player,
       walls
+    }
+  }
+
+  pub fn keys_pressed(&mut self, keycodes: &Vec<Keycode>) {
+    for keycode in keycodes {
+      self.player.key_pressed(keycode);
     }
   }
 
