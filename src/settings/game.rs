@@ -6,5 +6,5 @@ pub const WINDOW_TITLE: &str = "Hello!";
 
 pub const BG_COLOR: ::color::Color = [0.75, 0.75, 0.75, 1.0];
 
-pub const FPS: f32 = 30.0;
+pub const FPS: f32 = 60.0;
 pub const UPDATE_DELAY: u64 = (1.0 / FPS * 1000.0) as u64;

@@ -100,6 +100,7 @@ impl event::EventHandler for GameState {
 
     self.game_manager.update(ctx)?;
 
+    self.last_update = Instant::now();
     return Ok(());
   }
 
