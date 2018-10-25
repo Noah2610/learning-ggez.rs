@@ -1,0 +1,8 @@
+[package]
+name    = "hello"
+version = "0.1.0"
+authors = ["Noah Rosenzweig <rosenzweig.noah@gmail.com>"]
+
+[dependencies]
+ggez   = "0.4"
+maplit = "1.0.1"
