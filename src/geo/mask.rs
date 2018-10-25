@@ -44,6 +44,13 @@ impl Mask {
     }
   }
 
+  pub fn rectangle(&self) -> ::ggez::graphics::Rect {
+    [
+      self.point.x, self.point.y,
+      self.size.w,  self.size.h
+    ].into()
+  }
+
   fn side(&self, side: char) -> f32 {
     let top_left: Point = match self.origin {
       Origin::Center => Point::new(

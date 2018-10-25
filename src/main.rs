@@ -1,12 +1,12 @@
 extern crate ggez;
 // #[macro_use] extern crate maplit;
 
-use std::collections::HashMap;
+//use std::collections::HashMap;
 
 mod settings;
 mod geo;
 mod color;
-//pub mod entity;
+mod entity;
 mod game;
 
 fn main() {

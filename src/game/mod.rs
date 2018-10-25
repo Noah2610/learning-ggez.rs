@@ -1,5 +1,4 @@
 use ::std::time::{Instant, Duration};
-use ::settings::game::*;
 use ::ggez;
 use ::ggez::{
   graphics,
@@ -7,6 +6,10 @@ use ::ggez::{
   GameResult,
   event
 };
+use ::settings::game::*;
+use ::entity;
+
+mod game_manager;
 
 // GAME //
 pub struct Game {
@@ -45,13 +48,15 @@ impl Game {
 
 // GAME_STATE //
 struct GameState {
-  last_update: Instant
+  game_manager: game_manager::GameManager,
+  last_update:  Instant
 }
 
 impl GameState {
   pub fn new() -> Self {
     Self {
-      last_update: Instant::now()
+      game_manager: game_manager::GameManager::new(),
+      last_update:  Instant::now()
     }
   }
 }
@@ -61,6 +66,8 @@ impl event::EventHandler for GameState {
     if Instant::now() - self.last_update < Duration::from_millis(UPDATE_DELAY)
     { return Ok(()); }
 
+    self.game_manager.update(_ctx)?;
+
     return Ok(());
   }
 
@@ -68,7 +75,7 @@ impl event::EventHandler for GameState {
     // Clear the screen
     graphics::clear(ctx);
 
-
+    self.game_manager.draw(ctx)?;
 
     // Actually draw the new frame
     graphics::present(ctx);
