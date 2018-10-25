@@ -1,7 +1,7 @@
 // POINT //
 pub struct Point {
-  x: f32,
-  y: f32,
+  pub x: f32,
+  pub y: f32,
 }
 
 impl Point {
@@ -12,8 +12,8 @@ impl Point {
 
 // SIZE //
 pub struct Size {
-  w: f32,
-  h: f32,
+  pub w: f32,
+  pub h: f32,
 }
 
 impl Size {
@@ -22,4 +22,4 @@ impl Size {
   }
 }
 
-mod mask;
+pub mod mask;
