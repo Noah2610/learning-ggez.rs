@@ -4,6 +4,12 @@ pub struct Point {
   pub y: f32,
 }
 
+impl Clone for Point {
+  fn clone(&self) -> Self {
+    Self { ..*self }
+  }
+}
+
 impl Point {
   pub fn new(x: f32, y: f32) -> Self {
     Self { x, y }

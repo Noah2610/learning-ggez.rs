@@ -9,7 +9,7 @@ use ::ggez::{
 };
 use ::settings::game::*;
 
-mod game_manager;
+pub mod game_manager;
 
 // GAME //
 pub struct Game {

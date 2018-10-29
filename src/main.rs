@@ -8,7 +8,7 @@ mod geo;
 mod color;
 mod entity;
 mod control;
-mod game;
+pub mod game;
 
 fn main() {
   let mut game = game::Game::new();

@@ -44,12 +44,49 @@ impl Mask {
     }
   }
 
+  pub fn point(&self) -> &Point {
+    &self.point
+  }
+
+  pub fn point_mut(&mut self) -> &mut Point {
+    &mut self.point
+  }
+
+  pub fn set_point(&mut self, point: Point) {
+    self.point = point;
+  }
+
   pub fn rectangle(&self) -> ::ggez::graphics::Rect {
     let top_left: Point = self.top_left();
     return [
       top_left.x,  top_left.y,
       self.size.w, self.size.h
     ].into();
+  }
+
+  pub fn intersects(&self, mask: &Mask) -> bool {
+    let self_sides: SideCollection = self.sides();
+    let othr_sides: SideCollection = mask.sides();
+
+    return (
+      (
+        (
+          self_sides.left >= othr_sides.left &&
+          self_sides.left <= othr_sides.right
+        ) || (
+          self_sides.left  <= othr_sides.left &&
+          self_sides.right >= othr_sides.left
+        )
+      ) && (
+        (
+          self_sides.top >= othr_sides.top &&
+          self_sides.top <= othr_sides.bottom
+        ) || (
+          self_sides.top    <= othr_sides.top &&
+          self_sides.bottom >= othr_sides.top
+        )
+      )
+    );
   }
 
   fn top_left(&self) -> Point {
@@ -95,30 +132,5 @@ impl Mask {
       self.side('l'),
       self.side('r')
     )
-  }
-
-  fn intersects(&self, mask: Mask) -> bool {
-    let self_sides: SideCollection = self.sides();
-    let othr_sides: SideCollection = mask.sides();
-
-    return (
-      (
-        (
-          self_sides.left >= othr_sides.left &&
-          self_sides.left <= othr_sides.right
-        ) || (
-          self_sides.left  <= othr_sides.left &&
-          self_sides.right >= othr_sides.left
-        )
-      ) && (
-        (
-          self_sides.top >= othr_sides.top &&
-          self_sides.top <= othr_sides.bottom
-        ) || (
-          self_sides.top    <= othr_sides.top &&
-          self_sides.bottom >= othr_sides.top
-        )
-      )
-    );
   }
 }
